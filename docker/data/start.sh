@@ -134,17 +134,6 @@ echo ""
 echo "===== Apply Server Configuration on config.lua ====="
 echo ""
 
-sed -i "/mysqlHost = .*$/c\mysqlHost = \"$OT_DB_HOST\"" config.lua
-sed -i "/mysqlUser = .*$/c\mysqlUser = \"$OT_DB_USER\"" config.lua
-sed -i "/mysqlPass = .*$/c\mysqlPass = \"$OT_DB_PASSWORD\"" config.lua
-sed -i "/mysqlPort = .*$/c\mysqlPort = $OT_DB_PORT" config.lua
-sed -i "/mysqlDatabase = .*$/c\mysqlDatabase = \"$OT_DB_DATABASE\"" config.lua
-sed -i "/ip = .*$/c\ip = \"$OT_SERVER_IP\"" config.lua
-sed -i "/loginProtocolPort = .*$/c\loginProtocolPort = $OT_SERVER_LOGIN_PORT" config.lua
-sed -i "/gameProtocolPort = .*$/c\gameProtocolPort = $OT_SERVER_GAME_PORT" config.lua
-sed -i "/statusProtocolPort = .*$/c\statusProtocolPort = $OT_SERVER_STATUS_PORT" config.lua
-sed -i "/dataPackDirectory = .*$/c\dataPackDirectory = \"$OT_SERVER_DATA\"" config.lua
-
 cat config.lua
 
 echo ""
