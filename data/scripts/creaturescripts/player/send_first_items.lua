@@ -82,7 +82,7 @@ local config = {
 		},
 	},
 
-		[VOCATION.ID.MONK] = {
+	[VOCATION.ID.MONK] = {
 		items = {
 			{ 50171, 1 }, -- jo staff
 			{ 3359, 1 }, -- brass armor
@@ -98,7 +98,7 @@ local config = {
 			{ 5710, 1 }, -- light shovel
 			{ 266, 10 }, -- health potion
 		},
-	},
+	}
 }
 
 local sendFirstItems = CreatureEvent("SendFirstItems")
