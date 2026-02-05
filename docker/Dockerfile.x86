@@ -47,7 +47,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-	
+# Create non-root user
+RUN useradd -m -u 1000 canary && \
+	chown -R canary:canary /canary && \
+	chmod +x /canary/start.sh
+
 COPY docker/data/start.sh start.sh
+RUN chown canary:canary /canary/start.sh && chmod +x /canary/start.sh
+
+# Switch to non-root user
+USER canary
 
 ENTRYPOINT ["/canary/start.sh"]
