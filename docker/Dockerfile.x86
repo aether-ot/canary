@@ -31,31 +31,36 @@ RUN export VCPKG_ROOT=/opt/vcpkg/ && cmake --preset linux-release -DTOGGLE_BIN_F
 
 # Stage 3: load data and execute
 FROM ubuntu:24.04
+
+# Define volume
 VOLUME [ "/data" ]
 
+# 1. Copiar TODOS os arquivos necessários primeiro
 COPY --from=build /srv/build/linux-release/bin/canary /bin/canary
 COPY LICENSE *.sql key.pem /canary/
 COPY data /canary/data
 COPY data-canary /canary/data-canary
 COPY data-otservbr-global /canary/data-otservbr-global
 COPY config.lua.dist /canary/config.lua
+# Copia o script explicitamente para o destino final para evitar ambiguidades
+COPY docker/data/start.sh /canary/start.sh
 
 WORKDIR /canary
 
+# 2. Instalar dependências
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	mariadb-client curl wget \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+    mariadb-client curl wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN useradd -m -u 1000 canary && \
-	chown -R canary:canary /canary && \
-	chmod +x /canary/start.sh
+# 3. Ajustar permissões UMA ÚNICA VEZ
+# O usuário 'ubuntu' (UID 1000) já existe na imagem ubuntu:24.04 base.
+# Criar o diretório /data e garantir permissões corretas
+RUN mkdir -p /data && \
+    chown -R ubuntu:ubuntu /canary /data && \
+    chmod +x /canary/start.sh
 
-COPY docker/data/start.sh start.sh
-RUN chown canary:canary /canary/start.sh && chmod +x /canary/start.sh
-
-# Switch to non-root user
-USER canary
+# 4. Trocar para o usuário
+USER ubuntu
 
 ENTRYPOINT ["/canary/start.sh"]
